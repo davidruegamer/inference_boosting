@@ -10,7 +10,7 @@ library(iboost)
 alpha <- 0.05
 n <- 300
 nu <- 0.1
-mstop <- 20
+mstop <- 50
 commonDf <- 6
 commonKnots <- 14
 simReps <- 500
@@ -67,10 +67,10 @@ mu <- mu - mean(mu)
 sdmu <- sd(mu)
 
 settings <- expand.grid(list(SNR = c(0.5, 1)))#, 
-#ind = c(5, 15)))
+                             #ind = c(5, 15)))
 
 for(this_set in 1:nrow(settings)){
-  
+
   sigma = sdmu / settings$SNR[this_set]
   # ind = settings$ind[this_set]
   ind = 15
@@ -110,7 +110,7 @@ for(this_set in 1:nrow(settings)){
       return(mod)
       
     }
-    
+
     
     
     ss <- sort(selC)
@@ -122,15 +122,15 @@ for(this_set in 1:nrow(settings)){
     s1 <- Sys.time()
     
     sols <- try(iboost(obj = modOrg, 
-                       method = "impsamp",
-                       var = vars, 
-                       varForSampling = sigma^2,
-                       alpha = alpha, 
-                       B = B, 
-                       refit.mboost = modFun, 
-                       ncore = 1,
-                       computeCI = FALSE,
-                       checkBL = FALSE))
+             method = "impsamp",
+             var = vars, 
+             varForSampling = sigma^2,
+             alpha = alpha, 
+             B = B, 
+             refit.mboost = modFun, 
+             ncore = 1,
+             computeCI = FALSE,
+             checkBL = FALSE))
     
     s2 <- Sys.time() - s1
     
@@ -163,9 +163,9 @@ for(this_set in 1:nrow(settings)){
       }
       
       reti <- do.call("rbind", reti)
-      
+  
     }
-    
+
     return(reti)
     
   }, mc.cores=nrCores)
@@ -181,11 +181,11 @@ for(this_set in 1:nrow(settings)){
 res <- lapply(1:nrow(settings), function(set) readRDS(paste0("sim_results/splines/OLS_setting_", set, ".RDS")))
 
 for(i in 1:nrow(settings)){
-  
+
   # res[[i]] <- rbindlist(res[[i]][sapply(res[[i]], class)!="try-error"])
   res[[i]]$SNR <- settings$SNR[i]
   # res[[i]]$nrCov <- settings$ind[i]
-  
+
 }
 
 res <- do.call("rbind", res)
@@ -204,7 +204,7 @@ g <- ggplot(res, aes(sample = pval, colour = factor(SNR))) +
   geom_qq(distribution = stats::qunif, size = 1, geom="line") +
   theme_bw() + facet_grid(covariate ~ vartype) + # coord_flip() +
   xlab("Expected Quantiles") + ylab("Observed p-values") # +
-
+  
 g
 
 saveRDS(g, file="plot_objects/splines/refit_w_OLScov_15covs.RDS")
