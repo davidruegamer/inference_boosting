@@ -174,7 +174,7 @@ for(this_set in 1:nrow(settings)){
     
   }, mc.cores=25)
   
-  saveRDS(res, file=paste0("sim_results/linear/simPCnew_",this_set,".RDS"))
+  saveRDS(res, file=paste0("simPCnew_",this_set,".RDS"))
   
 }
 

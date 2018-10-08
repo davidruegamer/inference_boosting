@@ -207,4 +207,4 @@ g <- ggplot(res, aes(sample = pval, colour = factor(SNR))) +
   
 g
 
-saveRDS(g, file="plot_objects/splines/refit_w_OLScov_15covs.RDS")
+saveRDS(g, file="refit_w_OLScov_15covs.RDS")
